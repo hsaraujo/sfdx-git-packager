@@ -9,6 +9,7 @@ const LWC_REGEX = /(.*\/lwc\/\w*)\/.*/;
 const COMP_META = /.*(.cls|\.trigger|\.page|\.component)-meta.xml/;
 const STATIC_RESOURCE_FOLDER_REGEX = /(.*\/staticresources\/\w*)\/.*/;
 const STATIC_RESOURCE_FILE_REGEX = /(.*\/staticresources\/\w*)\.\w*/;
+const EXPERIENCE_BUNDLE_REGEX = /(.*\/experiences\/\w*)\/.*/;
 
 export type SourceResolveFn = (destination: string) => Promise<any>;
 
@@ -98,6 +99,14 @@ const metadataResolvers: MetadataResolver[] = [
       return [path, `${baseName}.resource-meta.xml`];
     },
     getIsDirectory: () => false
+  },
+  {
+    match: EXPERIENCE_BUNDLE_REGEX,
+    getMetadataPaths: async(path: string, ref: string) => {
+        const baseName = EXPERIENCE_BUNDLE_REGEX.exec(path)[1];
+        return [path, `${baseName}.site-meta.xml`];
+    },
+    getIsDirectory: () => true
   }
 ];
 
