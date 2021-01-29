@@ -7,9 +7,19 @@ export const transformCustomLabels = (newLabels: string, oldLabels: string) => {
   const indexesToRemove: number[] = [];
   aJson.CustomLabels.labels.forEach((label, i) => {
     const apiName = label.fullName._text;
-    const match = bJson.CustomLabels.labels.find(bLabel => bLabel.fullName._text === apiName);
-    if (match && JSON.stringify(match) === JSON.stringify(label)) {
-      indexesToRemove.push(i);
+    
+    // xml2js converts to an object when there's only 1 custom label
+    if(Array.isArray(bJson.CustomLabels.labels)){
+
+      const match = bJson.CustomLabels.labels.find(bLabel => bLabel.fullName._text === apiName);
+      if (match && JSON.stringify(match) === JSON.stringify(label)) {
+        indexesToRemove.push(i);
+      }
+    }else {
+
+      if (apiName === bJson.CustomLabels.labels.fullName._text) {
+        indexesToRemove.push(i);
+      }
     }
   });
   aJson.CustomLabels.labels = aJson.CustomLabels.labels.filter((l, i) => !indexesToRemove.includes(i) );
